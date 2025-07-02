@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eaglercraft Server List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .server-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .server-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .copy-btn {
+            transition: background-color 0.2s ease-in-out;
+        }
+        .copy-btn:hover {
+            background-color: #4f46e5;
+        }
+        .copied-feedback {
+            transition: opacity 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+
+    <!-- Header -->
+    <header class="bg-gray-800 shadow-lg">
+        <div class="container mx-auto px-6 py-4">
+            <h1 class="text-3xl font-bold text-center text-indigo-400">Eaglercraft Server List</h1>
+            <p class="text-center text-gray-400 mt-2">A collection of public Eaglercraft servers to join and play on.</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <div id="server-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Server cards will be injected here by JavaScript -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 mt-8 py-4">
+        <div class="container mx-auto px-6 text-center text-gray-500">
+            <p>&copy; 2024 Eaglercraft Server List. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const servers = [
+            { name: 'ArchMC', address: 'wss://mc.arch.lol' },
+            { name: 'Zentic', address: 'wss://zentic.cc' },
+            { name: 'Asspixel', address: 'wss://mc.asspixel.net' },
+            { name: 'TuffNet', address: 'wss://tuff.tf' },
+            { name: 'CleverTeaching', address: 'wss://clever-teaching.com' },
+            { name: 'CheeseburgerSMP', address: 'wss://play.cheeseburgersmp.lol' },
+            { name: 'Rice Network', address: 'wss://mc.ricenetwork.xyz' },
+            { name: 'NEXO', address: 'wss://nexo-app.net'},
+            { name: 'Ethereal', address: 'wss://ethereal.mov'}
+        ];
+
+        const serverList = document.getElementById('server-list');
+
+        servers.forEach((server, index) => {
+            const serverCard = document.createElement('div');
+            serverCard.className = 'server-card bg-gray-800 rounded-lg shadow-md p-6';
+            
+            serverCard.innerHTML = `
+                <h2 class="text-2xl font-semibold text-indigo-300 mb-2">${server.name}</h2>
+                <div class="flex items-center justify-between bg-gray-700 rounded-md p-2">
+                    <code class="text-gray-300 truncate">${server.address}</code>
+                    <button class="copy-btn bg-indigo-600 text-white font-bold py-2 px-4 rounded-md ml-4" data-address="${server.address}">
+                        Copy
+                    </button>
+                </div>
+                <div id="feedback-${index}" class="copied-feedback text-green-400 mt-2 opacity-0">Copied to clipboard!</div>
+            `;
+            
+            serverList.appendChild(serverCard);
+        });
+
+        serverList.addEventListener('click', function(e) {
+            if (e.target.classList.contains('copy-btn')) {
+                const address = e.target.dataset.address;
+                const feedbackElement = e.target.parentElement.nextElementSibling;
+
+                // Create a temporary textarea to copy the text
+                const textArea = document.createElement('textarea');
+                textArea.value = address;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    // Show feedback
+                    feedbackElement.style.opacity = '1';
+                    setTimeout(() => {
+                        feedbackElement.style.opacity = '0';
+                    }, 2000);
+                } catch (err) {
+                    console.error('Failed to copy text: ', err);
+                }
+                document.body.removeChild(textArea);
+            }
+        });
+    </script>
+
+</body>
+</html>
